@@ -51,8 +51,7 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
 
 <!-- PITANJA -->
 <div style="text-align:center;margin-bottom:10px;" class="hidden" id="backTypes">
-  <button onclick="backToTypes()">⬅ Nazad na tipove</button>
-</div>
+  </div>
 <div class="questions hidden" id="questions"></div>
 
 <!-- POPUP -->
@@ -212,9 +211,15 @@ const data = {
 
 
     ]
+
   }
+
 };
 /*************************************************/
+const levelNames = {
+  laki: "Laki",
+  teski: "Teški"
+};
 
 let currentLevel = '';
 
@@ -222,7 +227,7 @@ function selectLevel(level) {
   currentLevel = level;
   document.getElementById('levelSelect').classList.add('hidden');
   document.getElementById('typeSelect').classList.remove('hidden');
-  document.getElementById('levelTitle').innerText = `Izabrani nivo: ${level.toUpperCase()}`;
+  document.getElementById('levelTitle').innerText = `Izabrani nivo: ${levelNames[level]}`;
   document.getElementById('title').innerText = 'Izaberite tip pitanja';
 }
 
@@ -241,6 +246,7 @@ function showQuestions(type) {
 
   qDiv.classList.remove('hidden');
 }
+
 
 function backToLevels() {
   document.getElementById('levelSelect').classList.remove('hidden');
