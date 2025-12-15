@@ -32,9 +32,10 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
 <h1 id="title">Izaberite nivo</h1>
 
 <div class="center" id="levelSelect">
-  <div class="card" data-level="laki">Laki nivo</div>
-  <div class="card" data-level="teski">Teški nivo</div>
+  <div class="card" onclick="selectLevel('laki')">Laki nivo</div>
+  <div class="card" onclick="selectLevel('teski')">Teški nivo</div>
 </div>
+
 
 
 <div id="typeSelect" class="hidden">
@@ -204,11 +205,14 @@ const data = {
 
 let currentLevel = '';
 
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('#levelSelect .card').forEach(card => {
-    card.addEventListener('click', () => {
-      const level = card.getAttribute('data-level');
-      currentLevel = level;
+function selectLevel(level) {
+  currentLevel = level;
+  document.getElementById('levelSelect').classList.add('hidden');
+  document.getElementById('typeSelect').classList.remove('hidden');
+  document.getElementById('levelTitle').innerText = `Izabrani nivo: ${level.toUpperCase()}`;
+  document.getElementById('title').innerText = 'Izaberite tip pitanja';
+}
+
 
       // Prikaz tipova pitanja
       document.getElementById('levelSelect').classList.add('hidden');
@@ -261,4 +265,5 @@ function closePopup() {
 
 </body>
 </html>
+
 
