@@ -20,10 +20,15 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
 @media (max-width: 600px) {
   .center { flex-direction: column; align-items: center; }
   .card { width: 90%; }
-  .types { flex-direction: column; gap: 15px; }
+  .types { 
+      flex-direction: column; 
+      gap: 15px; 
+      align-items: stretch; /* ovo stavlja dugmad da zauzmu cijelu širinu */ 
+  }
   .type-btn { width: 100%; text-align: center; }
   .questions { padding: 0 10px; }
 }
+
 </style>
 </head>
 <body>
@@ -273,4 +278,5 @@ function closePopup() {
 
 </body>
 </html>
+
 
