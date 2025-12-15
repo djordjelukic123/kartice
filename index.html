@@ -9,12 +9,13 @@ body { font-family: Arial, sans-serif; background:#f1f1f1; margin:0; padding:20p
 h1, h2 { text-align:center; }
 .center { display:flex; justify-content:center; gap:30px; margin-top:50px; }
 .card { background:white; padding:30px; border-radius:12px; width:220px; text-align:center; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); }
-.hidden { display:none; }
+.card:active { transform: scale(0.97); }
+.hidden { display:none !important; }
 .types { display:flex; justify-content:center; gap:20px; margin:30px 0; }
 .type-btn { background:#007bff; color:white; padding:12px 18px; border-radius:8px; cursor:pointer; }
 .questions { max-width:700px; margin:0 auto; }
 .question { background:#ddd; padding:10px; margin:6px 0; border-radius:6px; cursor:pointer; }
-.popup-bg { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; }
+.popup-bg { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; z-index:1000; }
 .popup { background:white; padding:20px; border-radius:10px; width:350px; text-align:center; }
 button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; cursor:pointer; background:#007bff; color:white; }
 @media (max-width: 600px) {
@@ -30,13 +31,11 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
 
 <h1 id="title">Izaberite nivo</h1>
 
-<!-- IZBOR NIVOA -->
 <div class="center" id="levelSelect">
-  <div class="card" onclick="selectLevel('laki')">Laki nivo</div>
-  <div class="card" onclick="selectLevel('teski')">Teški nivo</div>
+  <div class="card" data-level="laki">Laki nivo</div>
+  <div class="card" data-level="teski">Teški nivo</div>
 </div>
 
-<!-- IZBOR TIPA PITANJA -->
 <div id="typeSelect" class="hidden">
   <div style="text-align:center;margin-bottom:10px;">
     <button onclick="backToLevels()">⬅ Nazad</button>
@@ -49,13 +48,11 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
   </div>
 </div>
 
-<!-- PITANJA -->
 <div style="text-align:center;margin-bottom:10px;" class="hidden" id="backTypes">
   <button onclick="backToTypes()">⬅ Nazad na tipove</button>
 </div>
 <div class="questions hidden" id="questions"></div>
 
-<!-- POPUP -->
 <div class="popup-bg" id="popupBg">
   <div class="popup">
     <p id="popupText"></p>
@@ -64,150 +61,145 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
 </div>
 
 <script>
-/*************************************************
- * OVDJE SAM UNOSIŠ PITANJA I ODGOVORE
- *************************************************/
 const data = {
   laki: {
     teorija: [
-      { pitanje: "Pitanje 1", odgovor: "Odgovor za 1 pitanje." },
-      { pitanje: "Pitanje 2", odgovor: "Odgovor za 2 pitanje." },
-      { pitanje: "Pitanje 3", odgovor: "Odgovor za 3 pitanje." },
-      { pitanje: "Pitanje 4", odgovor: "Odgovor za 4 pitanje." },
-      { pitanje: "Pitanje 5", odgovor: "Odgovor za 5 pitanje." },
-      { pitanje: "Pitanje 6", odgovor: "Odgovor za 6 pitanje." },
-      { pitanje: "Pitanje 7", odgovor: "Odgovor za 7 pitanje." },
-      { pitanje: "Pitanje 8", odgovor: "Odgovor za 8 pitanje." },
-      { pitanje: "Pitanje 9", odgovor: "Odgovor za 9 pitanje." },
-      { pitanje: "Pitanje 10", odgovor: "Odgovor za 10 pitanje." },
-      { pitanje: "Pitanje 11", odgovor: "Odgovor za 11 pitanje." },
-      { pitanje: "Pitanje 12", odgovor: "Odgovor za 12 pitanje." },
-      { pitanje: "Pitanje 13", odgovor: "Odgovor za 13 pitanje." },
-      { pitanje: "Pitanje 14", odgovor: "Odgovor za 14 pitanje." },
-      { pitanje: "Pitanje 15", odgovor: "Odgovor za 15 pitanje." },
-      { pitanje: "Pitanje 16", odgovor: "Odgovor za 16 pitanje." },
-      { pitanje: "Pitanje 17", odgovor: "Odgovor za 17 pitanje." },
-      { pitanje: "Pitanje 18", odgovor: "Odgovor za 18 pitanje." },
-      { pitanje: "Pitanje 19", odgovor: "Odgovor za 19 pitanje." },
-      { pitanje: "Pitanje 20", odgovor: "Odgovor za 20 pitanje." }
-      // dodaj do 20
+  { pitanje: "Pitanje 1", odgovor: "Odgovor za pitanje 1." },
+  { pitanje: "Pitanje 2", odgovor: "Odgovor za pitanje 2." },
+  { pitanje: "Pitanje 3", odgovor: "Odgovor za pitanje 3." },
+  { pitanje: "Pitanje 4", odgovor: "Odgovor za pitanje 4." },
+  { pitanje: "Pitanje 5", odgovor: "Odgovor za pitanje 5." },
+  { pitanje: "Pitanje 6", odgovor: "Odgovor za pitanje 6." },
+  { pitanje: "Pitanje 7", odgovor: "Odgovor za pitanje 7." },
+  { pitanje: "Pitanje 8", odgovor: "Odgovor za pitanje 8." },
+  { pitanje: "Pitanje 9", odgovor: "Odgovor za pitanje 9." },
+  { pitanje: "Pitanje 10", odgovor: "Odgovor za pitanje 10." },
+  { pitanje: "Pitanje 11", odgovor: "Odgovor za pitanje 11." },
+  { pitanje: "Pitanje 12", odgovor: "Odgovor za pitanje 12." },
+  { pitanje: "Pitanje 13", odgovor: "Odgovor za pitanje 13." },
+  { pitanje: "Pitanje 14", odgovor: "Odgovor za pitanje 14." },
+  { pitanje: "Pitanje 15", odgovor: "Odgovor za pitanje 15." },
+  { pitanje: "Pitanje 16", odgovor: "Odgovor za pitanje 16." },
+  { pitanje: "Pitanje 17", odgovor: "Odgovor za pitanje 17." },
+  { pitanje: "Pitanje 18", odgovor: "Odgovor za pitanje 18." },
+  { pitanje: "Pitanje 19", odgovor: "Odgovor za pitanje 19." },
+  { pitanje: "Pitanje 20", odgovor: "Odgovor za pitanje 20." }
     ],
     racun: [
-      { pitanje: "Zadatak 1", odgovor: "Odgovor za 1 zadatak." },
-      { pitanje: "Zadatak 2", odgovor: "Odgovor za 2 zadatak." },
-      { pitanje: "Zadatak 3", odgovor: "Odgovor za 3 zadatak." },
-      { pitanje: "Zadatak 4", odgovor: "Odgovor za 4 zadatak." },
-      { pitanje: "Zadatak 5", odgovor: "Odgovor za 5 zadatak." },
-      { pitanje: "Zadatak 6", odgovor: "Odgovor za 6 zadatak." },
-      { pitanje: "Zadatak 7", odgovor: "Odgovor za 7 zadatak." },
-      { pitanje: "Zadatak 8", odgovor: "Odgovor za 8 zadatak." },
-      { pitanje: "Zadatak 9", odgovor: "Odgovor za 9 zadatak." },
-      { pitanje: "Zadatak 10", odgovor: "Odgovor za 10 zadatak." },
-      { pitanje: "Zadatak 11", odgovor: "Odgovor za 11 zadatak." },
-      { pitanje: "Zadatak 12", odgovor: "Odgovor za 12 zadatak." },
-      { pitanje: "Zadatak 13", odgovor: "Odgovor za 13 zadatak." },
-      { pitanje: "Zadatak 14", odgovor: "Odgovor za 14 zadatak." },
-      { pitanje: "Zadatak 15", odgovor: "Odgovor za 15 zadatak." },
-      { pitanje: "Zadatak 16", odgovor: "Odgovor za 16 zadatak." },
-      { pitanje: "Zadatak 17", odgovor: "Odgovor za 17 zadatak." },
-      { pitanje: "Zadatak 18", odgovor: "Odgovor za 18 zadatak." },
-      { pitanje: "Zadatak 19", odgovor: "Odgovor za 19 zadatak." },
-      { pitanje: "Zadatak 20", odgovor: "Odgovor za 20 zadatak." }
-    ],
-    logika: [
-       { pitanje: "Logički izazov 1", odgovor: "Odgovor za 1 logički izazov." },
-      { pitanje: "Logički izazov 2", odgovor: "Odgovor za 2 logički izazov." },
-      { pitanje: "Logički izazov 3", odgovor: "Odgovor za 3 logički izazov." },
-      { pitanje: "Logički izazov 4", odgovor: "Odgovor za 4 logički izazov." },
-      { pitanje: "Logički izazov 5", odgovor: "Odgovor za 5 logički izazov." },
-      { pitanje: "Logički izazov 6", odgovor: "Odgovor za 6 logički izazov." },
-      { pitanje: "Logički izazov 7", odgovor: "Odgovor za 7 logički izazov." },
-      { pitanje: "Logički izazov 8", odgovor: "Odgovor za 8 logički izazov." },
-      { pitanje: "Logički izazov 9", odgovor: "Odgovor za 9 logički izazov." },
-      { pitanje: "Logički izazov 10", odgovor: "Odgovor za 10 logički izazov." },
-      { pitanje: "Logički izazov 11", odgovor: "Odgovor za 11 logički izazov." },
-      { pitanje: "Logički izazov 12", odgovor: "Odgovor za 12 logički izazov." },
-      { pitanje: "Logički izazov 13", odgovor: "Odgovor za 13 logički izazov." },
-      { pitanje: "Logički izazov 14", odgovor: "Odgovor za 14 logički izazov." },
-      { pitanje: "Logički izazov 15", odgovor: "Odgovor za 15 logički izazov." },
-      { pitanje: "Logički izazov 16", odgovor: "Odgovor za 16 logički izazov." },
-      { pitanje: "Logički izazov 17", odgovor: "Odgovor za 17 logički izazov." },
-      { pitanje: "Logički izazov 18", odgovor: "Odgovor za 18 logički izazov." },
-      { pitanje: "Logički izazov 19", odgovor: "Odgovor za 19 logički izazov." },
-      { pitanje: "Logički izazov 20", odgovor: "Odgovor za 20 logički izazov." }
-    ]
-  },
+  { pitanje: "Zadatak 1", odgovor: "Rješenje 1." },
+  { pitanje: "Zadatak 2", odgovor: "Rješenje 2." },
+  { pitanje: "Zadatak 3", odgovor: "Rješenje 3." },
+  { pitanje: "Zadatak 4", odgovor: "Rješenje 4." },
+  { pitanje: "Zadatak 5", odgovor: "Rješenje 5." },
+  { pitanje: "Zadatak 6", odgovor: "Rješenje 6." },
+  { pitanje: "Zadatak 7", odgovor: "Rješenje 7." },
+  { pitanje: "Zadatak 8", odgovor: "Rješenje 8." },
+  { pitanje: "Zadatak 9", odgovor: "Rješenje 9." },
+  { pitanje: "Zadatak 10", odgovor: "Rješenje 10." },
+  { pitanje: "Zadatak 11", odgovor: "Rješenje 11." },
+  { pitanje: "Zadatak 12", odgovor: "Rješenje 12." },
+  { pitanje: "Zadatak 13", odgovor: "Rješenje 13." },
+  { pitanje: "Zadatak 14", odgovor: "Rješenje 14." },
+  { pitanje: "Zadatak 15", odgovor: "Rješenje 15." },
+  { pitanje: "Zadatak 16", odgovor: "Rješenje 16." },
+  { pitanje: "Zadatak 17", odgovor: "Rješenje 17." },
+  { pitanje: "Zadatak 18", odgovor: "Rješenje 18." },
+  { pitanje: "Zadatak 19", odgovor: "Rješenje 19." },
+  { pitanje: "Zadatak 20", odgovor: "Rješenje 20." }
+]
 
+    logika: [
+  { pitanje: "Logički izazov 1", odgovor: "Odgovor 1." },
+  { pitanje: "Logički izazov 2", odgovor: "Odgovor 2." },
+  { pitanje: "Logički izazov 3", odgovor: "Odgovor 3." },
+  { pitanje: "Logički izazov 4", odgovor: "Odgovor 4." },
+  { pitanje: "Logički izazov 5", odgovor: "Odgovor 5." },
+  { pitanje: "Logički izazov 6", odgovor: "Odgovor 6." },
+  { pitanje: "Logički izazov 7", odgovor: "Odgovor 7." },
+  { pitanje: "Logički izazov 8", odgovor: "Odgovor 8." },
+  { pitanje: "Logički izazov 9", odgovor: "Odgovor 9." },
+  { pitanje: "Logički izazov 10", odgovor: "Odgovor 10." },
+  { pitanje: "Logički izazov 11", odgovor: "Odgovor 11." },
+  { pitanje: "Logički izazov 12", odgovor: "Odgovor 12." },
+  { pitanje: "Logički izazov 13", odgovor: "Odgovor 13." },
+  { pitanje: "Logički izazov 14", odgovor: "Odgovor 14." },
+  { pitanje: "Logički izazov 15", odgovor: "Odgovor 15." },
+  { pitanje: "Logički izazov 16", odgovor: "Odgovor 16." },
+  { pitanje: "Logički izazov 17", odgovor: "Odgovor 17." },
+  { pitanje: "Logički izazov 18", odgovor: "Odgovor 18." },
+  { pitanje: "Logički izazov 19", odgovor: "Odgovor 19." },
+  { pitanje: "Logički izazov 20", odgovor: "Odgovor 20." }
+]
+  },
   teski: {
     teorija: [
-      { pitanje: "Pitanje 1", odgovor: "Odgovor za 1 pitanje." },
-      { pitanje: "Pitanje 2", odgovor: "Odgovor za 2 pitanje." },
-      { pitanje: "Pitanje 3", odgovor: "Odgovor za 3 pitanje." },
-      { pitanje: "Pitanje 4", odgovor: "Odgovor za 4 pitanje." },
-      { pitanje: "Pitanje 5", odgovor: "Odgovor za 5 pitanje." },
-      { pitanje: "Pitanje 6", odgovor: "Odgovor za 6 pitanje." },
-      { pitanje: "Pitanje 7", odgovor: "Odgovor za 7 pitanje." },
-      { pitanje: "Pitanje 8", odgovor: "Odgovor za 8 pitanje." },
-      { pitanje: "Pitanje 9", odgovor: "Odgovor za 9 pitanje." },
-      { pitanje: "Pitanje 10", odgovor: "Odgovor za 10 pitanje." },
-      { pitanje: "Pitanje 11", odgovor: "Odgovor za 11 pitanje." },
-      { pitanje: "Pitanje 12", odgovor: "Odgovor za 12 pitanje." },
-      { pitanje: "Pitanje 13", odgovor: "Odgovor za 13 pitanje." },
-      { pitanje: "Pitanje 14", odgovor: "Odgovor za 14 pitanje." },
-      { pitanje: "Pitanje 15", odgovor: "Odgovor za 15 pitanje." },
-      { pitanje: "Pitanje 16", odgovor: "Odgovor za 16 pitanje." },
-      { pitanje: "Pitanje 17", odgovor: "Odgovor za 17 pitanje." },
-      { pitanje: "Pitanje 18", odgovor: "Odgovor za 18 pitanje." },
-      { pitanje: "Pitanje 19", odgovor: "Odgovor za 19 pitanje." },
-      { pitanje: "Pitanje 20", odgovor: "Odgovor za 20 pitanje." }
+  { pitanje: "Pitanje 1", odgovor: "Odgovor za pitanje 1." },
+  { pitanje: "Pitanje 2", odgovor: "Odgovor za pitanje 2." },
+  { pitanje: "Pitanje 3", odgovor: "Odgovor za pitanje 3." },
+  { pitanje: "Pitanje 4", odgovor: "Odgovor za pitanje 4." },
+  { pitanje: "Pitanje 5", odgovor: "Odgovor za pitanje 5." },
+  { pitanje: "Pitanje 6", odgovor: "Odgovor za pitanje 6." },
+  { pitanje: "Pitanje 7", odgovor: "Odgovor za pitanje 7." },
+  { pitanje: "Pitanje 8", odgovor: "Odgovor za pitanje 8." },
+  { pitanje: "Pitanje 9", odgovor: "Odgovor za pitanje 9." },
+  { pitanje: "Pitanje 10", odgovor: "Odgovor za pitanje 10." },
+  { pitanje: "Pitanje 11", odgovor: "Odgovor za pitanje 11." },
+  { pitanje: "Pitanje 12", odgovor: "Odgovor za pitanje 12." },
+  { pitanje: "Pitanje 13", odgovor: "Odgovor za pitanje 13." },
+  { pitanje: "Pitanje 14", odgovor: "Odgovor za pitanje 14." },
+  { pitanje: "Pitanje 15", odgovor: "Odgovor za pitanje 15." },
+  { pitanje: "Pitanje 16", odgovor: "Odgovor za pitanje 16." },
+  { pitanje: "Pitanje 17", odgovor: "Odgovor za pitanje 17." },
+  { pitanje: "Pitanje 18", odgovor: "Odgovor za pitanje 18." },
+  { pitanje: "Pitanje 19", odgovor: "Odgovor za pitanje 19." },
+  { pitanje: "Pitanje 20", odgovor: "Odgovor za pitanje 20." }
     ],
     racun: [
-            { pitanje: "Zadatak 1", odgovor: "Odgovor za 1 zadatak." },
-      { pitanje: "Zadatak 2", odgovor: "Odgovor za 2 zadatak." },
-      { pitanje: "Zadatak 3", odgovor: "Odgovor za 3 zadatak." },
-      { pitanje: "Zadatak 4", odgovor: "Odgovor za 4 zadatak." },
-      { pitanje: "Zadatak 5", odgovor: "Odgovor za 5 zadatak." },
-      { pitanje: "Zadatak 6", odgovor: "Odgovor za 6 zadatak." },
-      { pitanje: "Zadatak 7", odgovor: "Odgovor za 7 zadatak." },
-      { pitanje: "Zadatak 8", odgovor: "Odgovor za 8 zadatak." },
-      { pitanje: "Zadatak 9", odgovor: "Odgovor za 9 zadatak." },
-      { pitanje: "Zadatak 10", odgovor: "Odgovor za 10 zadatak." },
-      { pitanje: "Zadatak 11", odgovor: "Odgovor za 11 zadatak." },
-      { pitanje: "Zadatak 12", odgovor: "Odgovor za 12 zadatak." },
-      { pitanje: "Zadatak 13", odgovor: "Odgovor za 13 zadatak." },
-      { pitanje: "Zadatak 14", odgovor: "Odgovor za 14 zadatak." },
-      { pitanje: "Zadatak 15", odgovor: "Odgovor za 15 zadatak." },
-      { pitanje: "Zadatak 16", odgovor: "Odgovor za 16 zadatak." },
-      { pitanje: "Zadatak 17", odgovor: "Odgovor za 17 zadatak." },
-      { pitanje: "Zadatak 18", odgovor: "Odgovor za 18 zadatak." },
-      { pitanje: "Zadatak 19", odgovor: "Odgovor za 19 zadatak." },
-      { pitanje: "Zadatak 20", odgovor: "Odgovor za 20 zadatak." }
-    ],
-    logika: [
-             { pitanje: "Logički izazov 1", odgovor: "Odgovor za 1 logički izazov." },
-      { pitanje: "Logički izazov 2", odgovor: "Odgovor za 2 logički izazov." },
-      { pitanje: "Logički izazov 3", odgovor: "Odgovor za 3 logički izazov." },
-      { pitanje: "Logički izazov 4", odgovor: "Odgovor za 4 logički izazov." },
-      { pitanje: "Logički izazov 5", odgovor: "Odgovor za 5 logički izazov." },
-      { pitanje: "Logički izazov 6", odgovor: "Odgovor za 6 logički izazov." },
-      { pitanje: "Logički izazov 7", odgovor: "Odgovor za 7 logički izazov." },
-      { pitanje: "Logički izazov 8", odgovor: "Odgovor za 8 logički izazov." },
-      { pitanje: "Logički izazov 9", odgovor: "Odgovor za 9 logički izazov." },
-      { pitanje: "Logički izazov 10", odgovor: "Odgovor za 10 logički izazov." },
-      { pitanje: "Logički izazov 11", odgovor: "Odgovor za 11 logički izazov." },
-      { pitanje: "Logički izazov 12", odgovor: "Odgovor za 12 logički izazov." },
-      { pitanje: "Logički izazov 13", odgovor: "Odgovor za 13 logički izazov." },
-      { pitanje: "Logički izazov 14", odgovor: "Odgovor za 14 logički izazov." },
-      { pitanje: "Logički izazov 15", odgovor: "Odgovor za 15 logički izazov." },
-      { pitanje: "Logički izazov 16", odgovor: "Odgovor za 16 logički izazov." },
-      { pitanje: "Logički izazov 17", odgovor: "Odgovor za 17 logički izazov." },
-      { pitanje: "Logički izazov 18", odgovor: "Odgovor za 18 logički izazov." },
-      { pitanje: "Logički izazov 19", odgovor: "Odgovor za 19 logički izazov." },
-      { pitanje: "Logički izazov 20", odgovor: "Odgovor za 20 logički izazov." }
-    ]
+  { pitanje: "Zadatak 1", odgovor: "Rješenje 1." },
+  { pitanje: "Zadatak 2", odgovor: "Rješenje 2." },
+  { pitanje: "Zadatak 3", odgovor: "Rješenje 3." },
+  { pitanje: "Zadatak 4", odgovor: "Rješenje 4." },
+  { pitanje: "Zadatak 5", odgovor: "Rješenje 5." },
+  { pitanje: "Zadatak 6", odgovor: "Rješenje 6." },
+  { pitanje: "Zadatak 7", odgovor: "Rješenje 7." },
+  { pitanje: "Zadatak 8", odgovor: "Rješenje 8." },
+  { pitanje: "Zadatak 9", odgovor: "Rješenje 9." },
+  { pitanje: "Zadatak 10", odgovor: "Rješenje 10." },
+  { pitanje: "Zadatak 11", odgovor: "Rješenje 11." },
+  { pitanje: "Zadatak 12", odgovor: "Rješenje 12." },
+  { pitanje: "Zadatak 13", odgovor: "Rješenje 13." },
+  { pitanje: "Zadatak 14", odgovor: "Rješenje 14." },
+  { pitanje: "Zadatak 15", odgovor: "Rješenje 15." },
+  { pitanje: "Zadatak 16", odgovor: "Rješenje 16." },
+  { pitanje: "Zadatak 17", odgovor: "Rješenje 17." },
+  { pitanje: "Zadatak 18", odgovor: "Rješenje 18." },
+  { pitanje: "Zadatak 19", odgovor: "Rješenje 19." },
+  { pitanje: "Zadatak 20", odgovor: "Rješenje 20." }
+]
+     logika: [
+  { pitanje: "Logički izazov 1", odgovor: "Odgovor 1." },
+  { pitanje: "Logički izazov 2", odgovor: "Odgovor 2." },
+  { pitanje: "Logički izazov 3", odgovor: "Odgovor 3." },
+  { pitanje: "Logički izazov 4", odgovor: "Odgovor 4." },
+  { pitanje: "Logički izazov 5", odgovor: "Odgovor 5." },
+  { pitanje: "Logički izazov 6", odgovor: "Odgovor 6." },
+  { pitanje: "Logički izazov 7", odgovor: "Odgovor 7." },
+  { pitanje: "Logički izazov 8", odgovor: "Odgovor 8." },
+  { pitanje: "Logički izazov 9", odgovor: "Odgovor 9." },
+  { pitanje: "Logički izazov 10", odgovor: "Odgovor 10." },
+  { pitanje: "Logički izazov 11", odgovor: "Odgovor 11." },
+  { pitanje: "Logički izazov 12", odgovor: "Odgovor 12." },
+  { pitanje: "Logički izazov 13", odgovor: "Odgovor 13." },
+  { pitanje: "Logički izazov 14", odgovor: "Odgovor 14." },
+  { pitanje: "Logički izazov 15", odgovor: "Odgovor 15." },
+  { pitanje: "Logički izazov 16", odgovor: "Odgovor 16." },
+  { pitanje: "Logički izazov 17", odgovor: "Odgovor 17." },
+  { pitanje: "Logički izazov 18", odgovor: "Odgovor 18." },
+  { pitanje: "Logički izazov 19", odgovor: "Odgovor 19." },
+  { pitanje: "Logički izazov 20", odgovor: "Odgovor 20." }
+]
   }
 };
-/*************************************************/
 
 let currentLevel = '';
 
@@ -227,7 +219,7 @@ function showQuestions(type) {
   (data[currentLevel][type] || []).forEach((item, i) => {
     const q = document.createElement('div');
     q.className = 'question';
-    q.innerText = `${i+1}. ${item.pitanje}`;
+    q.innerText = `${i + 1}. ${item.pitanje}`;
     q.onclick = () => openPopup(item.odgovor);
     qDiv.appendChild(q);
   });
@@ -256,9 +248,18 @@ function openPopup(text) {
 function closePopup() {
   document.getElementById('popupBg').style.display = 'none';
 }
+
+
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#levelSelect .card').forEach(card => {
+    card.addEventListener('click', () => {
+      const level = card.getAttribute('data-level');
+      selectLevel(level);
+    });
+  });
+});
+
 </script>
 
 </body>
 </html>
-
-
