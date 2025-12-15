@@ -36,6 +36,7 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
   <div class="card" data-level="teski">Teški nivo</div>
 </div>
 
+
 <div id="typeSelect" class="hidden">
   <div style="text-align:center;margin-bottom:10px;">
     <button onclick="backToLevels()">⬅ Nazad</button>
@@ -203,13 +204,20 @@ const data = {
 
 let currentLevel = '';
 
-function selectLevel(level) {
-  currentLevel = level;
-  document.getElementById('levelSelect').classList.add('hidden');
-  document.getElementById('typeSelect').classList.remove('hidden');
-  document.getElementById('levelTitle').innerText = `Izabrani nivo: ${level.toUpperCase()}`;
-  document.getElementById('title').innerText = 'Izaberite tip pitanja';
-}
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('#levelSelect .card').forEach(card => {
+    card.addEventListener('click', () => {
+      const level = card.getAttribute('data-level');
+      currentLevel = level;
+
+      // Prikaz tipova pitanja
+      document.getElementById('levelSelect').classList.add('hidden');
+      document.getElementById('typeSelect').classList.remove('hidden');
+      document.getElementById('levelTitle').innerText = `Izabrani nivo: ${level.toUpperCase()}`;
+      document.getElementById('title').innerText = 'Izaberite tip pitanja';
+    });
+  });
+});
 
 function showQuestions(type) {
   document.getElementById('backTypes').classList.remove('hidden');
@@ -249,17 +257,8 @@ function closePopup() {
   document.getElementById('popupBg').style.display = 'none';
 }
 
-
-document.addEventListener('DOMContentLoaded', () => {
-  document.querySelectorAll('#levelSelect .card').forEach(card => {
-    card.addEventListener('click', () => {
-      const level = card.getAttribute('data-level');
-      selectLevel(level);
-    });
-  });
-});
-
 </script>
 
 </body>
 </html>
+
