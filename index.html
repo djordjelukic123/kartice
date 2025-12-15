@@ -1,125 +1,94 @@
 <!DOCTYPE html>
 <html lang="sr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pitanja – Struktura sa Pop-up</title>
-    <style>
-        body { font-family: Arial, sans-serif; margin: 0; padding: 20px; background: #f1f1f1; }
-        h1 { text-align: center; }
-        .levels { display: flex; gap: 20px; justify-content: center; flex-wrap: wrap; margin-top: 20px; }
-        .level { background: white; padding: 20px; border-radius: 10px; width: 45%; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-        .subsection { background: #e9e9e9; padding: 15px; border-radius: 10px; margin-top: 20px; }
-        .question { background: #d5d5d5; padding: 8px; margin: 6px 0; border-radius: 5px; cursor: pointer; }
-        .popup-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); display: none; align-items: center; justify-content: center; }
-        .popup { background: white; padding: 20px; border-radius: 10px; width: 300px; text-align: center; }
-        .close { margin-top: 10px; padding: 5px 10px; border: none; border-radius: 5px; cursor: pointer; background: #007bff; color: white; }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pitanja – Izbor nivoa</title>
+<style>
+body { font-family: Arial, sans-serif; background:#f1f1f1; margin:0; padding:20px; }
+h1 { text-align:center; }
+.center { display:flex; justify-content:center; gap:30px; margin-top:50px; }
+.card { background:white; padding:30px; border-radius:12px; width:220px; text-align:center; cursor:pointer; box-shadow:0 4px 10px rgba(0,0,0,0.15); }
+.hidden { display:none; }
+.types { display:flex; justify-content:center; gap:20px; margin:30px 0; }
+.type-btn { background:#007bff; color:white; padding:12px 18px; border-radius:8px; cursor:pointer; }
+.questions { max-width:600px; margin:0 auto; }
+.question { background:#ddd; padding:10px; margin:6px 0; border-radius:6px; cursor:pointer; }
+.popup-bg { position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.6); display:none; align-items:center; justify-content:center; }
+.popup { background:white; padding:20px; border-radius:10px; width:300px; text-align:center; }
+button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; cursor:pointer; background:#007bff; color:white; }
+</style>
 </head>
 <body>
 
-<h1>Odgovori Na Kartice</h1>
+<h1 id="title">Izaberite nivo</h1>
 
-<div class="levels">
-
-    <!-- LAKI NIVO -->
-    <div class="level">
-        <h2>Laki nivo</h2>
-
-        <!-- Teorijska pitanja -->
-        <div class="subsection">
-            <h3>1. Teorijska pitanja (20)</h3>
-            <div class="question" onclick="openPopup('Odgovor za pitanje 1')">Pitanje 1</div>
-            <div class="question" onclick="openPopup('Odgovor za pitanje 2')">Pitanje 2</div>
-            <div class="question" onclick="openPopup('Odgovor za pitanje 3')">Pitanje 3</div>
-			<div class="question" onclick="openPopup('Odgovor za pitanje 3')">Pitanje 4</div>
-            <!-- ... nastavi do pitanja 20 -->
-        </div>
-
-        <!-- Računski zadaci -->
-        <div class="subsection">
-            <h3>2. Računski zadaci (20)</h3>
-            <div class="question" onclick="openPopup('Odgovor za zadatak 1')">Zadatak 1</div>
-            <div class="question" onclick="openPopup('Odgovor za zadatak 2')">Zadatak 2</div>
-            <!-- ... nastavi do zadatka 20 -->
-        </div>
-
-        <!-- Logički izazovi -->
-        <div class="subsection">
-            <h3>3. Logički izazovi (20)</h3>
-            <div class="question" onclick="openPopup('Odgovor za izazov 1')">Izazov 1</div>
-            <div class="question" onclick="openPopup('Odgovor za izazov 2')">Izazov 2</div>
-			 <img src="majmunee.jpg" alt="Koja slika je tačan odgovor?"onclick="openPopup('Tačan odgovor je pod F.')" style="width: 100%; cursor: pointer; border-radius: 5px;">
-            <!-- ... nastavi do izazova 20 -->
-        </div>
-    </div>
-
-    <!-- TEŠKI NIVO -->
-    <div class="level">
-        <h2>Teški nivo</h2>
-
-        <!-- Teorijska pitanja -->
-        <div class="subsection">
-            <h3>1. Teorijska pitanja (20)</h3>
-            <div class="question" onclick="openPopup('Termodinamički proces kod kojeg je temperatura konstantna naziva se izotermski proces.')">Kako se naziva termodinamički proces kod kojeg je temperatura konstantna?</div>
-            <div class="question" onclick="openPopup('Odgovor za pitanje 2')">Pitanje 2</div>
-            <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 3</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 4</div>
-            <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 5</div>
-            <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 6</div>
-            <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 7</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 8</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 9</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 10</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 11</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 12</div>
-            <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 13</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 14</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 15</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 16</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 17</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 18</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 19</div>
-	        <div class="question" onclick="openPopup('Primjer odgovora.')">Pitanje 20</div>
-
-
-        </div>
-
-        <!-- Računski zadaci -->
-        <div class="subsection">
-            <h3>2. Računski zadaci (20)</h3>
-            <div class="question" onclick="openPopup('Odgovor za zadatak 1')">Zadatak 1</div>
-            <div class="question" onclick="openPopup('Odgovor za zadatak 2')">Zadatak 2</div>
-            <!-- ... nastavi do zadatka 20 -->
-        </div>
-
-        <!-- Logički izazovi -->
-        <div class="subsection">
-            <h3>3. Logički izazovi (20)</h3>
-            <div class="question" onclick="openPopup('Odgovor za izazov 1')">Izazov 1</div>
-            <div class="question" onclick="openPopup('Odgovor za izazov 2')">Izazov 2</div>
-            <!-- ... nastavi do izazova 20 -->
-        </div>
-    </div>
-
+<!-- IZBOR NIVOA -->
+<div class="center" id="levelSelect">
+  <div class="card" onclick="selectLevel('Laki')">Laki nivo</div>
+  <div class="card" onclick="selectLevel('Teški')">Teški nivo</div>
 </div>
 
-<!-- Popup element -->
+<!-- IZBOR TIPA PITANJA -->
+<div id="typeSelect" class="hidden">
+  <h2 style="text-align:center" id="levelTitle"></h2>
+  <div class="types">
+    <div class="type-btn" onclick="showQuestions('teorija')">Teorijska pitanja</div>
+    <div class="type-btn" onclick="showQuestions('racun')">Računski zadaci</div>
+    <div class="type-btn" onclick="showQuestions('logika')">Logički izazovi</div>
+  </div>
+</div>
+
+<!-- PITANJA -->
+<div class="questions hidden" id="questions"></div>
+
+<!-- POPUP -->
 <div class="popup-bg" id="popupBg">
-    <div class="popup" id="popupBox">
-        <p id="popupText"></p>
-        <button class="close" onclick="closePopup()">Zatvori</button>
-    </div>
+  <div class="popup">
+    <p id="popupText"></p>
+    <button onclick="closePopup()">Zatvori</button>
+  </div>
 </div>
 
 <script>
-function openPopup(answer) {
-    document.getElementById('popupText').innerText = answer;
-    document.getElementById('popupBg').style.display = 'flex';
+let currentLevel = '';
+
+const answers = {
+  teorija: Array.from({length:20}, (_,i)=>`Odgovor na teorijsko pitanje ${i+1}`),
+  racun: Array.from({length:20}, (_,i)=>`Rješenje računskog zadatka ${i+1}`),
+  logika: Array.from({length:20}, (_,i)=>`Rješenje logičkog izazova ${i+1}`)
+};
+
+function selectLevel(level) {
+  currentLevel = level;
+  document.getElementById('levelSelect').classList.add('hidden');
+  document.getElementById('typeSelect').classList.remove('hidden');
+  document.getElementById('levelTitle').innerText = `Izabrani nivo: ${level}`;
+  document.getElementById('title').innerText = 'Izaberite tip pitanja';
 }
+
+function showQuestions(type) {
+  const qDiv = document.getElementById('questions');
+  qDiv.innerHTML = '';
+  answers[type].forEach((ans, i) => {
+    const q = document.createElement('div');
+    q.className = 'question';
+    q.innerText = `Pitanje ${i+1}`;
+    q.onclick = () => openPopup(ans);
+    qDiv.appendChild(q);
+  });
+  qDiv.classList.remove('hidden');
+}
+
+function openPopup(text) {
+  document.getElementById('popupText').innerText = text;
+  document.getElementById('popupBg').style.display = 'flex';
+}
+
 function closePopup() {
-    document.getElementById('popupBg').style.display = 'none';
+  document.getElementById('popupBg').style.display = 'none';
 }
 </script>
 
-
+</body>
+</html>
