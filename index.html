@@ -21,6 +21,7 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
 .teorija-btn{ background:#1B7BB5; }
 .racun-btn{ background:#D83B2A; }
 .logika-btn{ background:#43A64B; }
+  
 @media (max-width: 600px) {
   .center { flex-direction: column; align-items: center; }
   .card { width: 90%; }
@@ -49,11 +50,11 @@ button { margin-top:10px; padding:6px 14px; border:none; border-radius:6px; curs
   </div>
   <h2 id="levelTitle"></h2>
   <div class="types">
-    <div class="type-btn teorija-btn" onclick="showQuestions('teorija')">Teorijska pitanja</div>
+<div class="type-btn teorija-btn" onclick="showQuestions('teorija')">Teorijska pitanja</div>
 <div class="type-btn racun-btn" onclick="showQuestions('racun')">Računski zadaci</div>
 <div class="type-btn logika-btn" onclick="showQuestions('logika')">Logički izazovi</div>
-  </div>
-</div>
+   </div>
+
 
 <!-- PITANJA -->
 <div style="text-align:center;margin-bottom:10px;" class="hidden" id="backTypes">
@@ -279,6 +280,7 @@ function closePopup() {
 
 </body>
 </html>
+
 
 
 
